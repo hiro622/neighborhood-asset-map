@@ -132,26 +132,15 @@ const handleLogin = () => {
     <h1 style={{ textAlign: "center" }}>Neighborhood Asset Map</h1>
 
     {/* Filter buttons */}
-    <div style={{ display: "flex", gap: "8px", justifyContent: "center" }}>
-      <button
-        onClick={() => setSelectedCategory("food")}
-        style={{ background: selectedCategory === "food" ? "gray" : "silver" }}
-      >
-        Food
-      </button>
-      <button
-        onClick={() => setSelectedCategory("health")}
-        style={{ background: selectedCategory === "health" ? "gray" : "silver" }}
-      >
-        Health
-      </button>
-      <button
-        onClick={() => setSelectedCategory("education")}
-        style={{ background: selectedCategory === "education" ? "gray" : "silver" }}
-      >
-        Education
-      </button>
-    </div>
+    <div style={{ display: "flex", gap: "8px", justifyContent: "center", flexWrap: "wrap" }}>
+  <button onClick={() => setSelectedCategory("food")} style={{ background: selectedCategory === "food" ? "gray" : "silver" }}>Food</button>
+  <button onClick={() => setSelectedCategory("health")} style={{ background: selectedCategory === "health" ? "gray" : "silver" }}>Health</button>
+  <button onClick={() => setSelectedCategory("education")} style={{ background: selectedCategory === "education" ? "gray" : "silver" }}>Education</button>
+  <button onClick={() => setSelectedCategory("shelter")} style={{ background: selectedCategory === "shelter" ? "gray" : "silver" }}>Shelter</button>
+  <button onClick={() => setSelectedCategory("housing")} style={{ background: selectedCategory === "housing" ? "gray" : "silver" }}>Housing</button>
+  <button onClick={() => setSelectedCategory("legal")} style={{ background: selectedCategory === "legal" ? "gray" : "silver" }}>Legal</button>
+  <button onClick={() => setSelectedCategory("services")} style={{ background: selectedCategory === "services" ? "gray" : "silver" }}>Services</button>
+</div>
  {isAuthenticated ? (
   <div style={{ marginTop: "10px", display: "flex", gap: "8px", justifyContent: "center", flexWrap: "wrap" }}>
     <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Resource name *" />
@@ -160,10 +149,14 @@ const handleLogin = () => {
     <input value={newHours} onChange={(e) => setNewHours(e.target.value)} placeholder="Hours (optional)" />
     <input value={newDescription} onChange={(e) => setNewDescription(e.target.value)} placeholder="Description (optional)" />
     <select value={newCategory} onChange={(e) => setNewCategory(e.target.value)}>
-      <option value="food">Food</option>
-      <option value="health">Health</option>
-      <option value="education">Education</option>
-    </select>
+  <option value="food">Food</option>
+  <option value="health">Health</option>
+  <option value="education">Education</option>
+  <option value="shelter">Shelter</option>
+  <option value="housing">Housing</option>
+  <option value="legal">Legal</option>
+  <option value="services">Services</option>
+</select>
     <button onClick={handleSubmit}>Add Resource</button>
   </div>
 ) : (
