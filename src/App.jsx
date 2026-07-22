@@ -133,9 +133,6 @@ const handleLogin = () => {
   }
 };
 
-  
-console.log("Current category:", selectedCategory);
-console.log("Filtered resources:", filteredResources.length);
  return (
   <div>
     {/* Title */}
