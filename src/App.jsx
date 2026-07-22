@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from './supabaseClient';
 import L from 'leaflet';
@@ -15,6 +15,7 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 
+
 function App() {
   const [newName, setNewName] = useState("");
   const [resources, setResources] = useState([]);
@@ -27,10 +28,18 @@ const [password, setPassword] = useState("");
 const [isAuthenticated, setIsAuthenticated] = useState(false);  
 const [selectedCategory ,setSelectedCategory] = useState("food");
 const [newCategory, setNewCategory] = useState("food");
+const [filteredResources, setFilteredResources] = useState([]);
+
 const filterResources = useCallback((resources, selectedCategory) => {
-  const type = resources.filter(n => n.category === selectedCategory && n.open === true);
-  return type;
+  return resources.filter(n => n.category === selectedCategory && n.open === true);
 }, []);
+
+useEffect(() => {
+  const filtered = filterResources(resources, selectedCategory);
+  console.log("Category changed to:", selectedCategory);
+  console.log("Filtered count:", filtered.length);
+  setFilteredResources(filtered);
+}, [selectedCategory, resources, filterResources]);
 
 const fetchResources = useCallback(async () => {
   const { data, error } = await supabase
@@ -125,7 +134,8 @@ const handleLogin = () => {
 };
 
   
-
+console.log("Current category:", selectedCategory);
+console.log("Filtered resources:", filteredResources.length);
  return (
   <div>
     {/* Title */}
@@ -177,7 +187,7 @@ const handleLogin = () => {
       {/* Sidebar */}
       <div style={{ width: "300px", height: "500px", overflowY: "auto", borderRight: "1px solid #ccc" }}>
         <h3 style={{ textAlign: "center", padding: "10px" }}>Resources</h3>
-        {filterResources(resources, selectedCategory).map(resource => (
+        {filteredResources.map(resource => (
           <div key={resource.name} style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
             <strong>{resource.name}</strong>
             <p style={{ margin: 0, fontSize: "12px", color: "gray" }}>{resource.category}</p>
@@ -189,6 +199,7 @@ const handleLogin = () => {
       {/* Map */}
       <div style={{ flex: 1 }}>
         <MapContainer
+          key={selectedCategory}
           center={[39.9526, -75.1652]}
           zoom={12}
           style={{ width: "100%", height: "500px" }}
@@ -197,8 +208,8 @@ const handleLogin = () => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; OpenStreetMap contributors'
           />
-          {filterResources(resources, selectedCategory).map(resource => (
-            <Marker key={resource.name} position={[resource.lat, resource.lng]}>
+          {filteredResources.map(resource => (
+              <Marker key={`${resource.name}-${selectedCategory}`} position={[resource.lat, resource.lng]}>
               <Popup>
                 <h3>{resource.name}</h3>
                 <p><strong>Category:</strong> {resource.category}</p>
